@@ -1,0 +1,23 @@
+.circular-gallery {
+  cursor: grab;
+  height: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+  width: 100%;
+}
+
+.circular-gallery.is-dragging,
+.circular-gallery:active {
+  cursor: grabbing;
+}
+
+.circular-gallery canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.circular-gallery:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 4px;
+}

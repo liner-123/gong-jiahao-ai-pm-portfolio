@@ -1,6 +1,13 @@
+import { useEffect, useState } from "react";
+
 import CardSwap, { Card } from "./components/CardSwap.jsx";
+import ChromaGrid from "./components/ChromaGrid.jsx";
 import CircularGallery from "./components/CircularGallery.jsx";
+import BlurText from "./components/BlurText.jsx";
+import GradientText from "./components/GradientText.jsx";
 import LiquidEther from "./components/LiquidEther.jsx";
+import TargetCursor from "./components/TargetCursor.jsx";
+import Threads from "./components/Threads.jsx";
 
 import portraitHero from "../assets/portrait-hero.png";
 import heroPhoto2 from "../assets/hero-photo-2.jpg";
@@ -8,8 +15,17 @@ import heroPhoto3 from "../assets/hero-photo-3.jpg";
 import sorImage from "../assets/case-sor-agent.png";
 import platformImage from "../assets/case-enterprise-platform.png";
 import campusImage from "../assets/case-campus-rag.png";
-import labImage from "../assets/ai-lab-stack.png";
-import resumeUrl from "../assets/gong-jiahao-resume.docx?url";
+import certificateUrl from "../assets/large-model-certificate.png";
+import dailyBriefScreenshot from "../assets/lab-screenshots/dailybrief-agent.png";
+import dailyBriefScreenshot2 from "../assets/lab-screenshots/dailybrief-agent-2.png";
+import dailyBriefScreenshot3 from "../assets/lab-screenshots/dailybrief-agent-3.png";
+import localPdfScreenshot from "../assets/lab-screenshots/local-pdf-chat-rag.png";
+import localPdfScreenshot2 from "../assets/lab-screenshots/local-pdf-chat-rag-2.png";
+import personalKnowledgeScreenshot from "../assets/lab-screenshots/personal-knowledge-agent.png";
+import personalKnowledgeScreenshot2 from "../assets/lab-screenshots/personal-knowledge-agent-2.png";
+import personalKnowledgeScreenshot3 from "../assets/lab-screenshots/personal-knowledge-agent-3.png";
+import personalKnowledgeScreenshot4 from "../assets/lab-screenshots/personal-knowledge-agent-4.png";
+import prdSkillScreenshot from "../assets/lab-screenshots/prd-skill.png";
 
 const navItems = [
   ["信息", "#profile"],
@@ -123,6 +139,7 @@ const cases = [
     eyebrow: "CASE 01",
     title: "SOR 需求规格文档拆解 Agent",
     image: sorImage,
+    chroma: "#f18f73",
     description:
       "面向技术规格文档人工拆解成本高、知识库比对依赖人工的问题，设计“文档解析 - 需求提取 - 知识库检索 - 满足性判定 - 人工复核”闭环。",
     bullets: [
@@ -139,6 +156,7 @@ const cases = [
     eyebrow: "CASE 02",
     title: "企业 AI 提效工具平台",
     image: platformImage,
+    chroma: "#298ef5",
     description:
       "参与设计“飞书 Bot + cc-connect + Cursor Agent + MCP/业务工具链”架构，统一接入代码查询与自动走查报告生成能力。",
     bullets: [
@@ -155,6 +173,7 @@ const cases = [
     eyebrow: "CASE 03",
     title: "校园迎新 RAG 智能体",
     image: campusImage,
+    chroma: "#6b8f4f",
     description:
       "面向迎新咨询信息分散、人工压力大和终端管理复杂的问题，设计垂直领域咨询 Agent 与网络终端管理系统，获得全国二等奖。",
     bullets: [
@@ -200,6 +219,12 @@ const labItems = [
     description:
       "以飞书机器人作为入口，通过 OpenClaw 将消息路由到 knowledge-inbox agent，并写入 Notion、Softr 与 Obsidian 组成的知识沉淀层。",
     tags: ["OpenClaw", "Feishu Bot", "Notion API", "Softr", "Obsidian", "OCR", "Knowledge Graph"],
+    screenshots: [
+      personalKnowledgeScreenshot,
+      personalKnowledgeScreenshot2,
+      personalKnowledgeScreenshot3,
+      personalKnowledgeScreenshot4,
+    ],
   },
   {
     title: "本地 PDF Chat RAG 智能体",
@@ -207,6 +232,7 @@ const labItems = [
     description:
       "跑通 PDF 提取、文档切分、向量化、FAISS、BM25、混合召回、CrossEncoder 重排和模型生成回答的完整链路。",
     tags: ["RAG", "PDF QA", "FAISS", "BM25", "Sentence Transformers", "CrossEncoder", "Gradio", "FastAPI"],
+    screenshots: [localPdfScreenshot, localPdfScreenshot2],
   },
   {
     title: "DailyBrief 每日简报 Agent",
@@ -214,6 +240,7 @@ const labItems = [
     description:
       "聚合 AI 前沿、科技动态、财经市场、国际时政和中文社区内容，再交给 LLM 摘要、筛选、重组并推送到飞书或网页报告。",
     tags: ["Daily Brief", "RSS", "GitHub Actions", "Feishu", "LLM Summary", "TypeScript", "信息聚合"],
+    screenshots: [dailyBriefScreenshot, dailyBriefScreenshot2, dailyBriefScreenshot3],
   },
   {
     title: "PRD 书写 Skill",
@@ -221,6 +248,7 @@ const labItems = [
     description:
       "帮助梳理目标用户、使用场景、核心问题、功能边界、数据结构、交互流程、验收标准和迭代计划。",
     tags: ["PRD", "产品设计", "需求分析", "功能拆解", "验收标准"],
+    screenshots: [prdSkillScreenshot],
   },
   {
     title: "论文与科研工作流 Skill 体系",
@@ -238,14 +266,12 @@ const awards = [
   ["Research", "两篇中文核心期刊通讯作者"],
 ];
 
-const certificateSlots = ["大模型教育管理应用创新赛证书", "CET6 六级证书"];
-
-function SectionHead({ eyebrow, title, meta, controls = true }) {
+function SectionHead({ eyebrow, title, meta, controls = true, gradient = true }) {
   return (
     <div className="section-head">
       <div>
         <p className="eyebrow">{eyebrow}</p>
-        <h2>{title}</h2>
+        <h2>{gradient ? <GradientText>{title}</GradientText> : title}</h2>
       </div>
       {controls && (
         <div className="section-controls" aria-hidden="true">
@@ -258,7 +284,131 @@ function SectionHead({ eyebrow, title, meta, controls = true }) {
   );
 }
 
+function ThreadsBackground() {
+  return <Threads className="section-threads" />;
+}
+
+function ScreenshotModal({ modal, onClose, onNext, onPrevious }) {
+  if (!modal) return null;
+
+  const { images, index, title } = modal;
+  const canBrowse = images.length > 1;
+
+  return (
+    <div className="screenshot-modal" role="dialog" aria-modal="true" aria-label={`${title} 截图预览`}>
+      <div className="modal-backdrop" aria-hidden="true" onClick={onClose} />
+      <div className="modal-panel">
+        <div className="modal-head">
+          <div>
+            <p className="eyebrow">SCREENSHOT</p>
+            <h3>{title}</h3>
+          </div>
+          <button className="modal-close" type="button" aria-label="关闭截图预览" onClick={onClose}>
+            ×
+          </button>
+        </div>
+
+        <div className="modal-image-stage">
+          {canBrowse && (
+            <button className="modal-arrow modal-arrow-left" type="button" aria-label="上一张截图" onClick={onPrevious}>
+              ‹
+            </button>
+          )}
+          <img src={images[index]} alt={`${title} 截图 ${index + 1}`} />
+          {canBrowse && (
+            <button className="modal-arrow modal-arrow-right" type="button" aria-label="下一张截图" onClick={onNext}>
+              ›
+            </button>
+          )}
+        </div>
+
+        <div className="modal-foot">
+          <span>
+            {index + 1} / {images.length}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
+  const getInitialCaseId = () => {
+    if (typeof window === "undefined") return "platform";
+    const id = window.location.hash.replace("#case-", "");
+    return cases.some((item) => item.id === id) ? id : "platform";
+  };
+
+  const [activeCaseId, setActiveCaseId] = useState(getInitialCaseId);
+  const [activeLabIndex, setActiveLabIndex] = useState(0);
+  const activeCase = cases.find((item) => item.id === activeCaseId) ?? cases[1];
+  const activeLabItem = labItems[activeLabIndex];
+  const [screenshotModal, setScreenshotModal] = useState(null);
+
+  const selectCase = (id) => {
+    setActiveCaseId(id);
+    window.history.replaceState(null, "", `#case-${id}`);
+  };
+
+  useEffect(() => {
+    const syncCaseFromHash = () => {
+      const id = window.location.hash.replace("#case-", "");
+      if (cases.some((item) => item.id === id)) {
+        setActiveCaseId(id);
+        window.requestAnimationFrame(() => {
+          document.getElementById(`case-${id}`)?.scrollIntoView();
+        });
+      }
+    };
+
+    syncCaseFromHash();
+    window.addEventListener("hashchange", syncCaseFromHash);
+
+    return () => {
+      window.removeEventListener("hashchange", syncCaseFromHash);
+    };
+  }, []);
+
+  const closeScreenshotModal = () => setScreenshotModal(null);
+  const showPreviousScreenshot = () => {
+    setScreenshotModal((current) =>
+      current
+        ? {
+            ...current,
+            index: (current.index - 1 + current.images.length) % current.images.length,
+          }
+        : current,
+    );
+  };
+  const showNextScreenshot = () => {
+    setScreenshotModal((current) =>
+      current
+        ? {
+            ...current,
+            index: (current.index + 1) % current.images.length,
+          }
+        : current,
+    );
+  };
+
+  useEffect(() => {
+    if (!screenshotModal) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") closeScreenshotModal();
+      if (event.key === "ArrowLeft") showPreviousScreenshot();
+      if (event.key === "ArrowRight") showNextScreenshot();
+    };
+
+    document.body.classList.add("modal-open");
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.classList.remove("modal-open");
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [screenshotModal]);
+
   return (
     <>
       <header className="topbar" aria-label="主导航">
@@ -275,9 +425,6 @@ function App() {
           </div>
           <div className="nav-actions">
             <span>AI PM Portfolio</span>
-            <a className="nav-pill" href={resumeUrl} download>
-              下载简历
-            </a>
           </div>
         </nav>
       </header>
@@ -303,10 +450,12 @@ function App() {
               <div className="education-list" aria-label="教育经历">
                 <div>
                   <span>2024.09 - 至今</span>
+                  <em>985</em>
                   <strong>同济大学 电子信息 硕士</strong>
                 </div>
                 <div>
                   <span>2019.09 - 2023.06</span>
+                  <em>211</em>
                   <strong>江南大学 土木工程 本科</strong>
                 </div>
               </div>
@@ -314,14 +463,6 @@ function App() {
                 {["AI 产品经理", "Agent", "RAG", "PRD", "模型评测", "企业提效工具"].map((tag) => (
                   <span key={tag}>{tag}</span>
                 ))}
-              </div>
-              <div className="hero-actions">
-                <a className="primary-button" href={resumeUrl} download>
-                  下载简历
-                </a>
-                <a className="ghost-button ghost-on-hero" href="#cases">
-                  查看案例
-                </a>
               </div>
             </div>
 
@@ -342,6 +483,7 @@ function App() {
         </section>
 
         <section className="section" id="map">
+          <ThreadsBackground />
           <SectionHead
             eyebrow="CAPABILITY MAP"
             title="AI 产品落地能力地图"
@@ -356,57 +498,51 @@ function App() {
         </section>
 
         <section className="section section-bone" id="cases">
+          <ThreadsBackground />
           <div className="section-head">
             <div>
               <p className="eyebrow">CORE CASES</p>
-              <h2>企业与比赛产品案例</h2>
+              <h2>
+                <GradientText>企业与比赛产品案例</GradientText>
+              </h2>
             </div>
           </div>
 
-          <div className="case-tabs" aria-label="案例快捷跳转">
-            {cases.map((item) => (
-              <a
-                className="case-tab"
-                href={`#case-${item.id}`}
-                key={item.id}
-              >
-                {item.tab}
-              </a>
-            ))}
-          </div>
+          <span className="case-anchor" id={`case-${activeCase.id}`} aria-hidden="true" />
+          <ChromaGrid items={cases} activeId={activeCaseId} onSelect={selectCase} />
 
-          <div className="case-stack">
-            {cases.map((caseItem) => (
-              <article className="case-panel" id={`case-${caseItem.id}`} key={caseItem.id}>
-                <div className="feature-card">
-                  <img src={caseItem.image} alt={`${caseItem.title} 视觉图`} />
-                  <div className="feature-label">{caseItem.label}</div>
-                </div>
-                <div className="case-copy">
-                  <p className="eyebrow case-number">{caseItem.eyebrow}</p>
-                  <h3>{caseItem.title}</h3>
-                  <p>{caseItem.description}</p>
-                  <ul>
-                    {caseItem.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                  <div className="proof-row">
-                    {caseItem.proof.map((proof) => (
-                      <span key={proof}>{proof}</span>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+          <article className="case-detail-panel">
+            <div className="case-detail-media">
+              <img src={activeCase.image} alt={`${activeCase.title} 视觉图`} />
+              <div className="feature-label">{activeCase.label}</div>
+            </div>
+            <div className="case-copy">
+              <p className="eyebrow case-number">{activeCase.eyebrow}</p>
+              <h3>{activeCase.title}</h3>
+              <p>{activeCase.description}</p>
+              <ul>
+                {activeCase.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+              <div className="proof-row">
+                {activeCase.proof.map((proof) => (
+                  <span key={proof}>{proof}</span>
+                ))}
+              </div>
+            </div>
+          </article>
         </section>
 
         <section className="statement">
-          <p>好的 AI 产品不是把模型接进流程，而是把业务目标、可控边界和评测闭环一起放进交付标准。</p>
+          <ThreadsBackground />
+          <p>
+            <BlurText>好的 AI 产品不是把模型接进流程，而是把业务目标、可控边界和评测闭环一起放进交付标准。</BlurText>
+          </p>
         </section>
 
         <section className="section" id="evaluation">
+          <ThreadsBackground />
           <SectionHead
             eyebrow="EVALUATION & RELIABILITY"
             title="AI 产品稳定性与评测方法"
@@ -440,33 +576,60 @@ function App() {
         </section>
 
         <section className="section section-bone" id="lab">
+          <ThreadsBackground />
           <SectionHead eyebrow="AI LAB" title="个人 AI 实践" meta="长期工作流" />
           <p className="section-lead lab-lead">
             我把 AI 当作个人工作流的长期基础设施来实践，重点不是单点尝鲜，而是围绕信息摄入、知识沉淀、文档问答、日报生成和科研写作，逐步搭建属于自己的 Agent 与 Skill 体系。
           </p>
-          <div className="lab-layout">
-            <div className="feature-card lab-visual">
-              <img src={labImage} alt="个人 AI 实践视觉图" />
-              <div className="feature-label">Local AI Stack</div>
-            </div>
-            <div className="practice-grid">
-              {labItems.map((item) => (
-                <article className="practice-card" key={item.title}>
-                  <h3>{item.title}</h3>
-                  <p className="practice-position">{item.position}</p>
-                  <p>{item.description}</p>
-                  <div className="proof-row">
-                    {item.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                </article>
+          <div className="practice-switcher">
+            <div className="practice-nav" aria-label="个人 AI 实践项目">
+              {labItems.map((item, index) => (
+                <TargetCursor key={item.title}>
+                  <button
+                    className={`practice-nav-button ${index === activeLabIndex ? "is-active" : ""}`}
+                    type="button"
+                    onClick={() => setActiveLabIndex(index)}
+                    aria-pressed={index === activeLabIndex}
+                  >
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <strong>{item.title}</strong>
+                    <em>{item.tags.slice(0, 3).join(" / ")}</em>
+                  </button>
+                </TargetCursor>
               ))}
+            </div>
+
+            <div className="practice-detail" aria-live="polite">
+              <p className="eyebrow">SELECTED WORKFLOW</p>
+              <h3>{activeLabItem.title}</h3>
+              <p className="practice-position">{activeLabItem.position}</p>
+              <p>{activeLabItem.description}</p>
+              <div className="proof-row">
+                {activeLabItem.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+              {activeLabItem.screenshots && (
+                <button
+                  className="gallery-button"
+                  type="button"
+                  onClick={() =>
+                    setScreenshotModal({
+                      images: activeLabItem.screenshots,
+                      index: 0,
+                      title: activeLabItem.title,
+                    })
+                  }
+                >
+                  查看截图
+                </button>
+              )}
             </div>
           </div>
         </section>
 
         <section className="section proof-section" id="proof">
+          <ThreadsBackground />
           <SectionHead eyebrow="PROOF" title="成果与证书" controls={false} />
           <div className="proof-layout">
             <div className="award-grid">
@@ -474,15 +637,11 @@ function App() {
                 <article className="small-card" key={index}>
                   <span className="card-index">{index}</span>
                   <h3>{title}</h3>
-                </article>
-              ))}
-            </div>
-            <div className="certificate-grid" aria-label="证书展示预留位">
-              {certificateSlots.map((title) => (
-                <article className="certificate-card" key={title}>
-                  <span>Certificate</span>
-                  <h3>{title}</h3>
-                  <p>证书待补充</p>
+                  {index === "National Prize" && (
+                    <a className="gallery-button" href={certificateUrl} target="_blank" rel="noreferrer">
+                      查看证书
+                    </a>
+                  )}
                 </article>
               ))}
             </div>
@@ -490,7 +649,8 @@ function App() {
         </section>
 
         <section className="section contact-section" id="contact">
-          <SectionHead eyebrow="CONTACT" title="联系我" controls={false} />
+          <ThreadsBackground />
+          <SectionHead eyebrow="CONTACT" title="联系我" controls={false} gradient={false} />
           <div className="contact-only-layout">
             <aside className="contact-card">
               <p className="eyebrow">CONTACT</p>
@@ -499,9 +659,6 @@ function App() {
                 <a href="mailto:2432265@tongji.edu.cn">2432265@tongji.edu.cn</a>
                 <a href="tel:18474447573">18474447573</a>
               </div>
-              <a className="ghost-button ghost-on-light" href={resumeUrl} download>
-                下载完整简历
-              </a>
             </aside>
           </div>
         </section>
@@ -511,6 +668,13 @@ function App() {
         <span>GONG JIAHAO</span>
         <span>AI Product Manager Portfolio</span>
       </footer>
+
+      <ScreenshotModal
+        modal={screenshotModal}
+        onClose={closeScreenshotModal}
+        onNext={showNextScreenshot}
+        onPrevious={showPreviousScreenshot}
+      />
     </>
   );
 }

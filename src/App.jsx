@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import CardSwap, { Card } from "./components/CardSwap.jsx";
 import ChromaGrid from "./components/ChromaGrid.jsx";
 import CircularGallery from "./components/CircularGallery.jsx";
-import BlurText from "./components/BlurText.jsx";
+import ElectricBorder from "./components/ElectricBorder.jsx";
 import GradientText from "./components/GradientText.jsx";
 import LiquidEther from "./components/LiquidEther.jsx";
+import SpotlightCard from "./components/SpotlightCard.jsx";
 import TargetCursor from "./components/TargetCursor.jsx";
+import TextType from "./components/TextType.jsx";
 import Threads from "./components/Threads.jsx";
 
 import portraitHero from "../assets/portrait-hero.png";
@@ -94,9 +96,12 @@ const wrapText = (text, maxLength) => {
   return lines;
 };
 
-const createAbilityCardImage = ({ description, index, tags, title }) => {
+const abilityCardColors = ["#eef6ff", "#f0f8f2", "#fff5eb", "#f5f0ff", "#eef8f8"];
+
+const createAbilityCardImage = ({ description, index, tags, title }, itemIndex) => {
   const descriptionLines = wrapText(description, 16).slice(0, 4);
   const tagLines = wrapText(tags, 22).slice(0, 2);
+  const fill = abilityCardColors[itemIndex % abilityCardColors.length];
   const descriptionMarkup = descriptionLines
     .map((line, lineIndex) => `<tspan x="58" dy="${lineIndex === 0 ? 0 : 54}">${escapeSvg(line)}</tspan>`)
     .join("");
@@ -112,9 +117,9 @@ const createAbilityCardImage = ({ description, index, tags, title }) => {
         .desc { fill: #25282b; font: 500 36px Inter, 'Microsoft YaHei', sans-serif; }
         .tags { fill: #171718; font: 650 29px Inter, 'Microsoft YaHei', sans-serif; }
       </style>
-      <rect width="720" height="900" rx="46" fill="#ffffff"/>
-      <rect x="24" y="24" width="672" height="852" rx="42" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
-      <rect x="58" y="608" width="604" height="162" rx="28" fill="#f5f5f7"/>
+      <rect width="720" height="900" rx="46" fill="${fill}"/>
+      <rect x="24" y="24" width="672" height="852" rx="42" fill="rgba(255,255,255,0.72)" stroke="#d8dfe8" stroke-width="2"/>
+      <rect x="58" y="608" width="604" height="162" rx="28" fill="rgba(255,255,255,0.58)"/>
       <text class="index" x="58" y="102">${escapeSvg(index)}</text>
       <text class="title" x="58" y="222">${escapeSvg(title)}</text>
       <text class="desc" x="58" y="342">${descriptionMarkup}</text>
@@ -126,8 +131,8 @@ const createAbilityCardImage = ({ description, index, tags, title }) => {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };
 
-const abilityGalleryItems = abilities.map((item) => ({
-  image: createAbilityCardImage(item),
+const abilityGalleryItems = abilities.map((item, index) => ({
+  image: createAbilityCardImage(item, index),
   text: item.title,
 }));
 
@@ -262,8 +267,8 @@ const labItems = [
 const awards = [
   ["Scholarship", "同济大学校级奖学金"],
   ["National Prize", "大模型教育管理应用创新赛全国二等奖"],
-  ["Language", "CET6"],
-  ["Research", "两篇中文核心期刊通讯作者"],
+  ["Language", "英语CET6证书"],
+  ["Research", "发表两篇中文核心期刊"],
 ];
 
 function SectionHead({ eyebrow, title, meta, controls = true, gradient = true }) {
@@ -291,7 +296,7 @@ function ThreadsBackground() {
 function ScreenshotModal({ modal, onClose, onNext, onPrevious }) {
   if (!modal) return null;
 
-  const { images, index, title } = modal;
+  const { eyebrow = "SCREENSHOT", images, index, title } = modal;
   const canBrowse = images.length > 1;
 
   return (
@@ -300,7 +305,7 @@ function ScreenshotModal({ modal, onClose, onNext, onPrevious }) {
       <div className="modal-panel">
         <div className="modal-head">
           <div>
-            <p className="eyebrow">SCREENSHOT</p>
+            <p className="eyebrow">{eyebrow}</p>
             <h3>{title}</h3>
           </div>
           <button className="modal-close" type="button" aria-label="关闭截图预览" onClick={onClose}>
@@ -487,7 +492,7 @@ function App() {
           <SectionHead
             eyebrow="CAPABILITY MAP"
             title="AI 产品落地能力地图"
-            meta="一屏总览"
+            controls={false}
           />
           <p className="section-lead">
             围绕 Agent、RAG 与企业提效场景，完成从业务问题定义、产品方案设计到评测迭代的闭环。
@@ -495,6 +500,7 @@ function App() {
           <div className="ability-gallery-shell">
             <CircularGallery items={abilityGalleryItems} />
           </div>
+          <p className="ability-hint">向左滑动查看更多</p>
         </section>
 
         <section className="section section-bone" id="cases">
@@ -537,7 +543,7 @@ function App() {
         <section className="statement">
           <ThreadsBackground />
           <p>
-            <BlurText>好的 AI 产品不是把模型接进流程，而是把业务目标、可控边界和评测闭环一起放进交付标准。</BlurText>
+            <TextType text="好的 AI 产品不是把模型接进流程，而是把业务目标、可控边界和评测闭环一起放进交付标准。" />
           </p>
         </section>
 
@@ -546,38 +552,40 @@ function App() {
           <SectionHead
             eyebrow="EVALUATION & RELIABILITY"
             title="AI 产品稳定性与评测方法"
-            meta="效果可解释"
+            controls={false}
           />
           <div className="evaluation-projects">
             {evaluationProjects.map((project) => (
-              <article className="evaluation-card" key={project.title}>
-                <div>
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                </div>
-                <div className="tag-row compact-tags">
-                  {project.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-                <ul className="evaluation-points">
-                  {project.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
-                </ul>
-                <div className="badcase-row">
-                  {project.badCases.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-              </article>
+              <ElectricBorder key={project.title}>
+                <article className="evaluation-card">
+                  <div>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                  </div>
+                  <div className="tag-row compact-tags">
+                    {project.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                  <ul className="evaluation-points">
+                    {project.highlights.map((highlight) => (
+                      <li key={highlight}>{highlight}</li>
+                    ))}
+                  </ul>
+                  <div className="badcase-row">
+                    {project.badCases.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                </article>
+              </ElectricBorder>
             ))}
           </div>
         </section>
 
         <section className="section section-bone" id="lab">
           <ThreadsBackground />
-          <SectionHead eyebrow="AI LAB" title="个人 AI 实践" meta="长期工作流" />
+          <SectionHead eyebrow="AI LAB" title="个人 AI 实践" controls={false} />
           <p className="section-lead lab-lead">
             我把 AI 当作个人工作流的长期基础设施来实践，重点不是单点尝鲜，而是围绕信息摄入、知识沉淀、文档问答、日报生成和科研写作，逐步搭建属于自己的 Agent 与 Skill 体系。
           </p>
@@ -616,12 +624,13 @@ function App() {
                   onClick={() =>
                     setScreenshotModal({
                       images: activeLabItem.screenshots,
+                      eyebrow: "PREVIEW",
                       index: 0,
                       title: activeLabItem.title,
                     })
                   }
                 >
-                  查看截图
+                  效果示意图
                 </button>
               )}
             </div>
@@ -634,15 +643,26 @@ function App() {
           <div className="proof-layout">
             <div className="award-grid">
               {awards.map(([index, title]) => (
-                <article className="small-card" key={index}>
+                <SpotlightCard className="small-card" key={index}>
                   <span className="card-index">{index}</span>
                   <h3>{title}</h3>
                   {index === "National Prize" && (
-                    <a className="gallery-button" href={certificateUrl} target="_blank" rel="noreferrer">
+                    <button
+                      className="gallery-button"
+                      type="button"
+                      onClick={() =>
+                        setScreenshotModal({
+                          images: [certificateUrl],
+                          eyebrow: "CERTIFICATE",
+                          index: 0,
+                          title,
+                        })
+                      }
+                    >
                       查看证书
-                    </a>
+                    </button>
                   )}
-                </article>
+                </SpotlightCard>
               ))}
             </div>
           </div>

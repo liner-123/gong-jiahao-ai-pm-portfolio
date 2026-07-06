@@ -42,32 +42,32 @@ const abilities = [
   {
     index: "01",
     title: "复杂业务场景诊断",
-    description: "从 SOR 文档拆解、代码查询、走查报告、迎新咨询等真实场景中识别 AI 产品机会。",
-    tags: "需求分析 / 用户流程 / 输入输出定义",
+    description: "从 SOR 需求拆解、企业代码查询、自动走查报告和校园迎新场景中定位 AI 产品机会。",
+    tags: "业务痛点 / 用户旅程 / 输入输出定义",
   },
   {
     index: "02",
     title: "AI 产品方案与 PRD 交付",
-    description: "将业务需求转化为 PRD、流程图、原型、验收标准和人工介入节点。",
-    tags: "PRD / 原型 / 流程 / 验收标准",
+    description: "熟练撰写 PRD、竞品分析和业务流程图，用原型工具把方案表达清楚。",
+    tags: "PRD / Figma / Axure / XMind / Visio",
   },
   {
     index: "03",
     title: "Agent / RAG 工作流产品化",
-    description: "设计文档解析、需求提取、知识库检索、满足性判定、人工复核等 AI 工作流。",
-    tags: "LangGraph / RAG / MCP / VLM",
+    description: "把 LangGraph、AutoGen、RAG、MCP、VLM 等技术能力翻译成可交付的产品流程。",
+    tags: "LangGraph / AutoGen / RAG / MCP",
   },
   {
     index: "04",
     title: "模型评测与可靠性迭代",
-    description: "构建问答测评集，用准确率、召回率、F1、答案一致性和成本评估模型表现。",
-    tags: "bad case / Prompt 优化 / 成本评估",
+    description: "围绕准确率、召回率、F1-Score、答案一致性和 Bad Case 持续迭代模型表现。",
+    tags: "准确率 / 召回率 / F1 / Bad Case",
   },
   {
     index: "05",
-    title: "企业 AI 工具链落地",
-    description: "连接飞书 Bot、Cursor Agent、GitLab MCP 与业务工具链，落地代码查询和报告生成场景。",
-    tags: "飞书 Bot / Cursor Agent / MCP / 自动报告",
+    title: "PoC 与原型快速构建",
+    description: "熟练运用 Codex、Cursor、Claude Code、Trae 等 AI 编码工具快速构建产品原型。",
+    tags: "Codex / Cursor / Claude Code / Trae",
   },
 ];
 
@@ -146,13 +146,13 @@ const cases = [
     image: sorImage,
     chroma: "#f18f73",
     description:
-      "面向技术规格文档人工拆解成本高、知识库比对依赖人工的问题，设计“文档解析 - 需求提取 - 知识库检索 - 满足性判定 - 人工复核”闭环。",
+      "在轻舟智航实习期间，针对 SOR 需求规格文档人工拆解成本高、极度依赖人工比对的问题，从 0 到 1 设计并落地面向技术规格文档的 AI 需求拆解 Agent。",
     bullets: [
-      "书写 PRD，明确 Agent 输入输出、人工介入节点和验收标准。",
-      "基于 LangGraph 设计 PDF 解析、图片识别、检索比对和循环纠错节点。",
-      "接入飞书知识问答，通过并发控制、缓冲池和 VLM 兜底优化效率与成本。",
+      "主导业务流程梳理与 PRD 撰写，设计 HITL 人机协同机制，明确 Agent 边界、人工复核节点和验收标准。",
+      "基于 LangGraph 设计条件分支、状态管理与循环纠错工作流，并持续迭代关键节点 Prompt，提升复杂文档解析稳定性。",
+      "制定“飞书 Aily 问答检索 + 并发控制 + 缓冲池 + VLM 兜底”策略，辅助业务团队将需求分析和人工复核效率提升 900% 以上。",
     ],
-    proof: ["需求拆解", "Agent 工作流", "知识库检索", "人机协同"],
+    proof: ["从 0 到 1", "HITL", "LangGraph", "效率提升 900%+"],
   },
   {
     id: "platform",
@@ -163,13 +163,13 @@ const cases = [
     image: platformImage,
     chroma: "#298ef5",
     description:
-      "参与设计“飞书 Bot + cc-connect + Cursor Agent + MCP/业务工具链”架构，统一接入代码查询与自动走查报告生成能力。",
+      "参与设计企业级 AI 提效工具平台，解决内部 AI 工具分散、复用率低的问题，统一接入代码查询与自动走查报告生成能力。",
     bullets: [
-      "梳理飞书交互层、Cursor Agent 执行层、MCP/HTTP 能力层和反馈闭环层。",
-      "接入 GitLab MCP Server，让非研发角色用自然语言查询模块职责和实现逻辑。",
-      "设计报告生成流程，支持走查记录校验、原子报告和对比报告自动生成。",
+      "主导梳理“飞书交互层 - Agent 执行层 - MCP 能力层”的整体产品架构，实现多类 AI 工具统一接入与分发。",
+      "推动接入 GitLab MCP Server，让非研发角色用自然语言查询代码，降低跨团队沟通成本。",
+      "设计自动化报告生成流程，统一格式并实现原子报告、对比报告和走查记录的自动校验生成。",
     ],
-    proof: ["飞书 Bot", "Cursor Agent", "MCP 工具链", "报告生成"],
+    proof: ["飞书交互层", "Agent 执行层", "MCP 能力层", "自动报告"],
   },
   {
     id: "campus",
@@ -180,13 +180,13 @@ const cases = [
     image: campusImage,
     chroma: "#6b8f4f",
     description:
-      "面向迎新咨询信息分散、人工压力大和终端管理复杂的问题，设计垂直领域咨询 Agent 与网络终端管理系统，获得全国二等奖。",
+      "作为项目负责人/核心设计者，针对校园迎新信息分散、网络设备运维协作不足等痛点，设计并落地垂直领域咨询 Agent 与网络终端管理系统，获得全国二等奖。",
     bullets: [
-      "设计“文档解析 - 语义分块 - 混合检索 - Prompt 约束 - 结果生成”链路。",
-      "通过混合检索和多轮 Prompt 优化提升高频问题召回与回答准确性。",
-      "配置 MCP_SSE 工具，实现哑终端在线监控、核心指标总结和运维支撑。",
+      "负责 RAG 链路策略定义，跑通“解析 - 分块 - 混合检索 - 生成”的核心问答流程。",
+      "引入敏感词库与双向审查机制，建立安全边界与效果评估机制，降低幻觉和越界风险。",
+      "引入 MCP 协议架构，打通哑终端数据孤岛，实现设备在线监控与核心指标自动化总结。",
     ],
-    proof: ["RAG 架构", "混合检索", "安全边界", "比赛成果"],
+    proof: ["项目负责人", "RAG 策略", "MCP 协议", "全国二等奖"],
   },
 ];
 
@@ -194,36 +194,36 @@ const evaluationProjects = [
   {
     title: "企业代码查询 Agent 测评",
     description:
-      "基于 CodeSeeker 真实代码检索场景，构建开放式问题、普通问题和诱导性问题，验证 Agent 是否能稳定定位代码分支、检索关键配置并输出可复核答案。",
-    tags: ["三轮重复推理", "准确率", "召回率", "F1", "答案一致性", "单题成本"],
+      "面向企业代码查询场景，构建覆盖行车/泊车业务的专业测评集，用普通、开放和诱导性问题验证 Agent 的稳定检索与抗幻觉能力。",
+    tags: ["普通问题", "开放问题", "诱导性问题", "准确率", "召回率", "F1-Score", "答案一致性"],
     highlights: [
-      "opus 4.8 综合表现最佳：Accuracy 92.86%，Recall 97.62%，F1 95.20%，Consistency 88.10%。",
-      "gpt-5.3-codex 性价比最高：F1 93.91%，单题成本约 $0.6957。",
-      "通过问题重构和系统提示词优化，误导性问题下的答案一致性从 61.90% 提升到 88.10%。",
+      "制定覆盖准确率、召回率、F1-Score 与答案一致性的多维 PM 评估标准。",
+      "通过深挖“浅层检索”“场景不明确”等 Bad Case，逆向迭代系统提示词和问题定义。",
+      "最终将核心模型抗幻觉准确率从 66.67% 提升到 92.86%，回答一致性从 61.90% 提升到 88.10%。",
     ],
-    badCases: ["分支不明确", "浅层检索", "场景歧义", "诱导性问题", "Prompt 与 rules 冲突"],
+    badCases: ["浅层检索", "场景不明确", "诱导性问题", "分支定位偏差", "答案不一致"],
   },
   {
     title: "校园迎新 RAG 智能体测评",
     description:
-      "围绕迎新咨询与本地知识库问答场景，基于 Ragas 框架构建标准测试集，评估 RAG 的检索召回、回答精准度、证据相关性和幻觉控制能力。",
-    tags: ["Ragas", "HybridSearch", "ChromaDB", "BM25", "BGE-Reranker", "MRR"],
+      "围绕迎新咨询与网络终端管理场景，定义 RAG 链路的安全边界、召回质量和答案可用性评估机制，确保回答可控、可追溯。",
+    tags: ["RAG", "混合检索", "敏感词库", "双向审查", "安全边界", "效果评估"],
     highlights: [
-      "通过优化 ChunkSize、Overlap、HybridSearch 与重排序策略，检索召回率从 65% 提升至 82%。",
-      "结合 ChromaDB 向量检索、BM25 关键词检索和 BGE-Reranker，回答精准度从 78% 提高到 94%。",
-      "迭代多版 System Prompt，加入上下文边界与拒答机制，缓解大模型幻觉并约束输出符合业务规范。",
+      "负责“解析 - 分块 - 混合检索 - 生成”链路策略定义，保证知识召回和回答生成路径清晰。",
+      "引入敏感词库与双向审查机制，为校园咨询类 Agent 建立可解释的安全边界。",
+      "通过 MCP 协议打通终端管理数据，扩展从问答咨询到设备监控和指标总结的产品能力。",
     ],
-    badCases: ["切片过粗", "召回遗漏", "Top-K 证据不足", "Prompt 边界不足", "无依据回答"],
+    badCases: ["信息分散", "召回遗漏", "越界回答", "幻觉风险", "终端数据孤岛"],
   },
 ];
 
 const labItems = [
   {
     title: "个人知识库 Agent",
-    position: "一个面向个人信息管理的知识入口 Agent，用来解决“收藏很多，但很难真正消化”的问题。",
+    position: "面向高频收藏但低消化率的个人学习者，解决“稍后阅读变成永不阅读”的问题。",
     description:
-      "以飞书机器人作为入口，通过 OpenClaw 将消息路由到 knowledge-inbox agent，并写入 Notion、Softr 与 Obsidian 组成的知识沉淀层。",
-    tags: ["OpenClaw", "Feishu Bot", "Notion API", "Softr", "Obsidian", "OCR", "Knowledge Graph"],
+      "设计并落地“飞书对话入口 + Agent 意图识别 + Notion 知识库 + 状态流转 + Obsidian 本地知识图谱 + 定时提醒”的知识管理闭环。",
+    tags: ["Feishu Bot", "Agent 意图识别", "Notion API", "Obsidian", "状态流转", "知识图谱", "定时提醒"],
     screenshots: [
       personalKnowledgeScreenshot,
       personalKnowledgeScreenshot2,
@@ -233,10 +233,10 @@ const labItems = [
   },
   {
     title: "本地 PDF Chat RAG 智能体",
-    position: "一个为了系统学习 RAG 而做的本地知识库项目，把 PDF 文档变成可以对话的资料库。",
+    position: "面向企业/垂直场景长文档检索难、资产沉淀利用率低和隐私安全要求高的问题。",
     description:
-      "跑通 PDF 提取、文档切分、向量化、FAISS、BM25、混合召回、CrossEncoder 重排和模型生成回答的完整链路。",
-    tags: ["RAG", "PDF QA", "FAISS", "BM25", "Sentence Transformers", "CrossEncoder", "Gradio", "FastAPI"],
+      "设计并落地“高效解析 - 混合检索 - 双模生成 - 精准溯源”的双模 RAG 智能问答系统，兼顾云端高质量回答与本地隐私合规。",
+    tags: ["RAG", "DeepSeek-R1", "Ollama", "FAISS", "BM25", "FastAPI", "流式问答", "精准溯源"],
     screenshots: [localPdfScreenshot, localPdfScreenshot2],
   },
   {
@@ -266,7 +266,7 @@ const labItems = [
 
 const awards = [
   ["Scholarship", "同济大学校级奖学金"],
-  ["National Prize", "大模型教育管理应用创新赛全国二等奖"],
+  ["National Prize", "基于大模型教育管理应用创新赛全国二等奖"],
   ["Language", "英语CET6证书"],
   ["Research", "发表两篇中文核心期刊"],
 ];
@@ -339,27 +339,23 @@ function ScreenshotModal({ modal, onClose, onNext, onPrevious }) {
 
 function App() {
   const getInitialCaseId = () => {
-    if (typeof window === "undefined") return "platform";
-    const id = window.location.hash.replace("#case-", "");
-    return cases.some((item) => item.id === id) ? id : "platform";
+    return "sor";
   };
 
   const [activeCaseId, setActiveCaseId] = useState(getInitialCaseId);
   const [activeLabIndex, setActiveLabIndex] = useState(0);
-  const activeCase = cases.find((item) => item.id === activeCaseId) ?? cases[1];
+  const activeCase = cases.find((item) => item.id === activeCaseId) ?? cases[0];
   const activeLabItem = labItems[activeLabIndex];
   const [screenshotModal, setScreenshotModal] = useState(null);
 
   const selectCase = (id) => {
     setActiveCaseId(id);
-    window.history.replaceState(null, "", `#case-${id}`);
   };
 
   useEffect(() => {
     const syncCaseFromHash = () => {
       const id = window.location.hash.replace("#case-", "");
       if (cases.some((item) => item.id === id)) {
-        setActiveCaseId(id);
         window.requestAnimationFrame(() => {
           document.getElementById(`case-${id}`)?.scrollIntoView();
         });
@@ -446,7 +442,7 @@ function App() {
               <h1>龚佳豪</h1>
               <p className="hero-intent">求职意向：AI 产品经理</p>
               <p className="hero-lead">
-                聚焦 Agent、RAG 与企业提效工具，把复杂业务场景拆成可交付、可评测、可迭代的 AI 产品方案。
+                拥有轻舟智航 AI 产品实习经历，聚焦 Agent、RAG、MCP 与企业提效工具，把复杂业务场景拆成可交付、可评测、可迭代的 AI 产品方案。
               </p>
               <div className="hero-contact" aria-label="联系方式">
                 <a href="tel:18474447573">18474447573</a>
@@ -465,7 +461,7 @@ function App() {
                 </div>
               </div>
               <div className="tag-row" aria-label="核心标签">
-                {["AI 产品经理", "Agent", "RAG", "PRD", "模型评测", "企业提效工具"].map((tag) => (
+                {["AI 产品经理", "Agent", "RAG", "MCP", "PRD", "模型评测", "PoC 原型"].map((tag) => (
                   <span key={tag}>{tag}</span>
                 ))}
               </div>
@@ -495,7 +491,7 @@ function App() {
             controls={false}
           />
           <p className="section-lead">
-            围绕 Agent、RAG 与企业提效场景，完成从业务问题定义、产品方案设计到评测迭代的闭环。
+            基于轻舟智航实习、比赛项目和个人 AI 实践，覆盖业务问题定义、产品方案设计、Agent/RAG 工作流落地、模型评测和 PoC 快速验证。
           </p>
           <div className="ability-gallery-shell">
             <CircularGallery items={abilityGalleryItems} />
@@ -543,7 +539,7 @@ function App() {
         <section className="statement">
           <ThreadsBackground />
           <p>
-            <TextType text="好的 AI 产品不是把模型接进流程，而是把业务目标、可控边界和评测闭环一起放进交付标准。" />
+            <TextType text="好的 AI 产品不是把模型接进流程，而是把业务目标、用户旅程、可控边界和评测闭环一起放进交付标准。" />
           </p>
         </section>
 
@@ -587,7 +583,7 @@ function App() {
           <ThreadsBackground />
           <SectionHead eyebrow="AI LAB" title="个人 AI 实践" controls={false} />
           <p className="section-lead lab-lead">
-            我把 AI 当作个人工作流的长期基础设施来实践，重点不是单点尝鲜，而是围绕信息摄入、知识沉淀、文档问答、日报生成和科研写作，逐步搭建属于自己的 Agent 与 Skill 体系。
+            我把 AI 当作个人工作流和产品验证基础设施来实践，重点不是单点尝鲜，而是围绕知识管理、长文档问答、信息摘要、PRD 写作和科研表达，持续打磨可复用的 Agent 与 Skill 工作流。
           </p>
           <div className="practice-switcher">
             <div className="practice-nav" aria-label="个人 AI 实践项目">
@@ -617,21 +613,43 @@ function App() {
                   <span key={tag}>{tag}</span>
                 ))}
               </div>
-              {activeLabItem.screenshots && (
-                <button
-                  className="gallery-button"
-                  type="button"
-                  onClick={() =>
-                    setScreenshotModal({
-                      images: activeLabItem.screenshots,
-                      eyebrow: "PREVIEW",
-                      index: 0,
-                      title: activeLabItem.title,
-                    })
-                  }
-                >
-                  效果示意图
-                </button>
+              {activeLabItem.screenshots?.length > 0 && (
+                <div className="practice-preview">
+                  <button
+                    className="gallery-button"
+                    type="button"
+                    onClick={() =>
+                      setScreenshotModal({
+                        images: activeLabItem.screenshots,
+                        eyebrow: "PREVIEW",
+                        index: 0,
+                        title: activeLabItem.title,
+                      })
+                    }
+                  >
+                    效果示意图
+                  </button>
+                  <div className="preview-thumb-grid" aria-label={`${activeLabItem.title} 效果图缩略图`}>
+                    {activeLabItem.screenshots.map((image, index) => (
+                      <button
+                        className="preview-thumb"
+                        key={image}
+                        type="button"
+                        onClick={() =>
+                          setScreenshotModal({
+                            images: activeLabItem.screenshots,
+                            eyebrow: "PREVIEW",
+                            index,
+                            title: activeLabItem.title,
+                          })
+                        }
+                      >
+                        <img src={image} alt={`${activeLabItem.title} 效果图 ${index + 1}`} />
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -647,20 +665,37 @@ function App() {
                   <span className="card-index">{index}</span>
                   <h3>{title}</h3>
                   {index === "National Prize" && (
-                    <button
-                      className="gallery-button"
-                      type="button"
-                      onClick={() =>
-                        setScreenshotModal({
-                          images: [certificateUrl],
-                          eyebrow: "CERTIFICATE",
-                          index: 0,
-                          title,
-                        })
-                      }
-                    >
-                      查看证书
-                    </button>
+                    <div className="award-certificate-actions">
+                      <button
+                        className="gallery-button"
+                        type="button"
+                        onClick={() =>
+                          setScreenshotModal({
+                            images: [certificateUrl],
+                            eyebrow: "CERTIFICATE",
+                            index: 0,
+                            title,
+                          })
+                        }
+                      >
+                        查看证书
+                      </button>
+                      <button
+                        className="certificate-thumb"
+                        type="button"
+                        onClick={() =>
+                          setScreenshotModal({
+                            images: [certificateUrl],
+                            eyebrow: "CERTIFICATE",
+                            index: 0,
+                            title,
+                          })
+                        }
+                      >
+                        <img src={certificateUrl} alt={`${title}证书缩略图`} />
+                        <span>证书预览</span>
+                      </button>
+                    </div>
                   )}
                 </SpotlightCard>
               ))}
@@ -674,7 +709,7 @@ function App() {
           <div className="contact-only-layout">
             <aside className="contact-card">
               <p className="eyebrow">CONTACT</p>
-              <h3>期待在真实业务中，把 AI 能力落到可用、可靠、可持续迭代的产品流程里。</h3>
+              <h3>期待在真实业务中，把 AI 能力落到可用、可靠、可评测、可持续迭代的产品流程里。</h3>
               <div className="contact-lines">
                 <a href="mailto:2432265@tongji.edu.cn">2432265@tongji.edu.cn</a>
                 <a href="tel:18474447573">18474447573</a>

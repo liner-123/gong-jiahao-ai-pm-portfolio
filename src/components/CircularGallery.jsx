@@ -215,7 +215,8 @@ class GalleryApp {
     this.viewport = this.viewportFromCamera();
     this.planes.forEach((plane) => plane.resize({ screen: this.screen, viewport: this.viewport }));
     if (!this.hasInitialPosition) {
-      const start = this.maxScroll() / 2;
+      const firstVisibleStart = this.planes[0]?.width ?? 0;
+      const start = this.clampScroll(firstVisibleStart);
       this.scroll.current = start;
       this.scroll.target = start;
       this.scroll.last = start;

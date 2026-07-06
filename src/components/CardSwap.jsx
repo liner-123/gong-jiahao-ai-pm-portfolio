@@ -3,6 +3,7 @@ import React, {
   cloneElement,
   forwardRef,
   isValidElement,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -77,6 +78,63 @@ export default function CardSwap({
   const intervalRef = useRef(null);
   const container = useRef(null);
 
+  const swap = useCallback(() => {
+    if (order.current.length < 2 || timelineRef.current?.isActive()) return;
+
+    const [front, ...rest] = order.current;
+    const elFront = refs[front].current;
+    if (!elFront) return;
+
+    const tl = gsap.timeline();
+    timelineRef.current = tl;
+
+    tl.to(elFront, {
+      y: "+=520",
+      duration: config.durDrop,
+      ease: config.ease,
+    });
+
+    tl.addLabel("promote", `-=${config.durDrop * config.promoteOverlap}`);
+    rest.forEach((idx, i) => {
+      const el = refs[idx].current;
+      if (!el) return;
+      const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
+      tl.set(el, { zIndex: slot.zIndex }, "promote");
+      tl.to(
+        el,
+        {
+          x: slot.x,
+          y: slot.y,
+          z: slot.z,
+          duration: config.durMove,
+          ease: config.ease,
+        },
+        `promote+=${i * 0.12}`
+      );
+    });
+
+    const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length);
+    tl.addLabel("return", `promote+=${config.durMove * config.returnDelay}`);
+    tl.call(() => gsap.set(elFront, { zIndex: backSlot.zIndex }), undefined, "return");
+    tl.to(
+      elFront,
+      {
+        x: backSlot.x,
+        y: backSlot.y,
+        z: backSlot.z,
+        duration: config.durReturn,
+        ease: config.ease,
+      },
+      "return"
+    );
+
+    tl.call(() => {
+      order.current = [...rest, front];
+      setFrontIndex(rest[0]);
+      timelineRef.current = null;
+    });
+  }, [cardDistance, config, refs, verticalDistance]);
+
   useEffect(() => {
     const total = refs.length;
     refs.forEach((ref, i) => {
@@ -84,62 +142,6 @@ export default function CardSwap({
         placeNow(ref.current, makeSlot(i, cardDistance, verticalDistance, total), skewAmount);
       }
     });
-
-    const swap = () => {
-      if (order.current.length < 2) return;
-
-      const [front, ...rest] = order.current;
-      const elFront = refs[front].current;
-      if (!elFront) return;
-
-      const tl = gsap.timeline();
-      timelineRef.current = tl;
-
-      tl.to(elFront, {
-        y: "+=520",
-        duration: config.durDrop,
-        ease: config.ease,
-      });
-
-      tl.addLabel("promote", `-=${config.durDrop * config.promoteOverlap}`);
-      rest.forEach((idx, i) => {
-        const el = refs[idx].current;
-        if (!el) return;
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
-        tl.set(el, { zIndex: slot.zIndex }, "promote");
-        tl.to(
-          el,
-          {
-            x: slot.x,
-            y: slot.y,
-            z: slot.z,
-            duration: config.durMove,
-            ease: config.ease,
-          },
-          `promote+=${i * 0.12}`
-        );
-      });
-
-      const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length);
-      tl.addLabel("return", `promote+=${config.durMove * config.returnDelay}`);
-      tl.call(() => gsap.set(elFront, { zIndex: backSlot.zIndex }), undefined, "return");
-      tl.to(
-        elFront,
-        {
-          x: backSlot.x,
-          y: backSlot.y,
-          z: backSlot.z,
-          duration: config.durReturn,
-          ease: config.ease,
-        },
-        "return"
-      );
-
-      tl.call(() => {
-        order.current = [...rest, front];
-        setFrontIndex(rest[0]);
-      });
-    };
 
     intervalRef.current = window.setInterval(swap, delay);
 
@@ -166,7 +168,23 @@ export default function CardSwap({
       window.clearInterval(intervalRef.current);
       timelineRef.current?.kill();
     };
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, refs, config]);
+  }, [cardDistance, delay, pauseOnHover, refs, skewAmount, swap, verticalDistance]);
+
+  const restartAutoSwap = () => {
+    window.clearInterval(intervalRef.current);
+    intervalRef.current = window.setInterval(swap, delay);
+  };
+
+  const handleAdvance = () => {
+    swap();
+    restartAutoSwap();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    handleAdvance();
+  };
 
   const rendered = childArr.map((child, i) =>
     isValidElement(child)
@@ -180,7 +198,16 @@ export default function CardSwap({
   );
 
   return (
-    <div ref={container} className="card-swap-container" style={{ width, height }}>
+    <div
+      ref={container}
+      aria-label="切换个人照片"
+      className="card-swap-container"
+      onClick={handleAdvance}
+      onKeyDown={handleKeyDown}
+      role="button"
+      style={{ width, height }}
+      tabIndex={0}
+    >
       {rendered}
     </div>
   );
